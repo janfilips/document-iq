@@ -1,4 +1,4 @@
-# Eterny
+# DocumentIQ
 
 ## How it Works
 
@@ -22,39 +22,7 @@ Secure, organized, and always within reach.
 - **AI Document Intelligence**
   Automatic classification, extraction, and smart search
 
-## Why Eterny
-
-Take full control of your portfolio—contracts, documents, insurance policies, investments—and never risk losing track of essential information. Eterny organizes everything you need, eliminating the clutter you don’t.
-
-[Get your vault](https://www.eterny.io/)
-
-## How Eterny Improves Your Life
-
-- **Stay in control of what you own**
-  No more endless searching. Everything at your fingertips.
-- **Plan smart, with no hassle**
-  Automated reminders for updates and renewals.
-- **Simple organization, fewer worries**
-  Structured, accessible, and future-ready.
-- **Secure and effortless sharing**
-  Grant access to trusted contacts without complications.
-
-[Get started for free](https://www.eterny.io/)
-
-## The Story of Eterny
-
-![Jitka Paterová](https://media.licdn.com/dms/image/v2/D4D03AQEwm58svKRV1A/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1706263816713?e=1752710400&v=beta&t=qyI4CHeN8GM_Nul5X5edye-F7Nfc-PwL7khB99G42lc)
-
-**Jitka Paterová**
-Founder of Eterny
-
-> "We built Eterny because managing assets and documents shouldn’t be a never-ending task. Your legacy deserves a vault that thinks ahead."
-
-[Start planning now](https://www.eterny.io/)
-
-## Developers
-
-### Setup
+## Setup
 
 1. Copy the development environment file:
    ```bash
@@ -65,10 +33,61 @@ Founder of Eterny
    docker compose build
    docker compose up
    ```
----
 
-- [Privacy Policy](https://www.eterny.io/privacy-policy)
-- Contact: hello@theeterny.com
-- Follow us: [LinkedIn](https://www.linkedin.com/company/the-eterny/) | [Instagram](https://www.instagram.com/the_eterny) | [Facebook](https://www.facebook.com/people/The-Eterny/61562243742369)
+# documentIQ Backend
 
-&copy; 2025 Eterny. All rights reserved.
+A FastAPI service that ingests customer documents (via upload or GCS), stores them per customer, logs metadata in a database, and triggers AI analysis with webhook callbacks.
+
+## Features
+
+* Upload or fetch documents from Google Cloud Storage
+* Store files under `BASE_UPLOAD_DIR` organized by customer ID
+* Track metadata (UUID, size, timestamps, status) in the `files` table
+* Trigger AI processing workflows and notify via webhooks
+
+## Requirements
+
+* Python 3.12 or higher
+* SQLite (default) or another SQL database (configure `DATABASE_URL`)
+* Google Cloud credentials (set `GOOGLE_APPLICATION_CREDENTIALS`)
+
+## Installation
+
+```bash
+git clone https://github.com/your-org/documentIQ.git
+cd documentIQ/backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Configuration
+
+Edit `backend/config.py` or use environment variables:
+
+* `BASE_UPLOAD_DIR`: directory to store uploaded files
+* `DATABASE_URL`: connection string for your database
+* `GOOGLE_APPLICATION_CREDENTIALS`: GCS service account key
+
+## Running the Server
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+The API listens on `/api/v1/document/{customer_id}` for POST requests.
+
+## Usage Example
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/1" \
+  -F "customer_data={\"customer_name\": \"Acme Corp\"}" \
+  -F "file=@/path/to/doc.pdf" \
+  -F "ai_analysis_mode=standard" \
+  -F "output_language=English" \
+  -F "webhook_url=https://example.com/webhook"
+```
+
+## License
+
+MIT License. No documents were harmed in the making of this API—though we can’t promise the same for your typos.
