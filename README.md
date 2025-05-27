@@ -90,4 +90,4 @@ curl -X POST "http://localhost:8000/api/v1/1" \
 
 ## License
 
-MIT License. No documents were harmed in the making of this API—though we can’t promise the same for your typos.
+MIT License. No documents were harmed in the making of this API - though we can’t promise the same for your typos.
